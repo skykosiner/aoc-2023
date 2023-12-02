@@ -5,5 +5,7 @@ import (
 )
 
 func main() {
-	dayone.SolveDayOne()
+	// Day one
+	dayone.SolveDayOnePartOne()
+	dayone.SolveDayOnePartTwo()
 }

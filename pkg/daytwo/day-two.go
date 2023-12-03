@@ -4,28 +4,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"unicode"
 	"strconv"
 	"strings"
 )
 
 type Game struct {
 	id int
-	red int
-	blue int
-	green int
 }
 
-type Color string
-
-const (
-	Red Color = "red"
-	Blue = "blue"
-	Green = "green"
-)
-
 func input() string {
-	content, err := ioutil.ReadFile("./pkg/daytwo/day-two-input-test.txt")
+	content, err := ioutil.ReadFile("./pkg/daytwo/day-two-input.txt")
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
@@ -35,37 +23,29 @@ func input() string {
 	return text
 }
 
-func getColor(color Color, line string) int {
-	// Set the limit depening on the color
-	limit := 0
-	switch color {
-	case Red:
-		limit = 12
-	case Green:
-		limit = 13
-	case Blue:
-		limit = 14
+func parseItems(sets []string) bool {
+	limits := map[string]int{
+		"red": 12,
+		"green": 13,
+		"blue": 14,
 	}
 
-	words := strings.FieldsFunc(line, func(r rune) bool {
-		return !unicode.IsLetter(r) && !unicode.IsNumber(r)
-	})
+	for _, set := range sets {
+		singles := strings.Split(set, ",")
 
-	var totalNumbers int
+		for _, single := range singles {
+			single = strings.TrimSpace(single)
+			value := strings.Split(single, " ")
 
-	for i := 0; i < len(words); i++ {
-		if words[i] == string(color) && i > 0 {
-			if num, err := strconv.Atoi(words[i-1]); err == nil {
-				totalNumbers += num
+			qty, _ := strconv.Atoi(value[0])
+
+			if qty > limits[value[1]] {
+				return false
 			}
 		}
 	}
 
-	if totalNumbers >= limit {
-		return 0
-	}
-
-	return totalNumbers
+	return true
 }
 
 func partOne(lines []string, games *[]Game) {
@@ -81,12 +61,9 @@ func partOne(lines []string, games *[]Game) {
 		id, _ := strconv.Atoi(strings.Replace(strings.Split(line, ":")[0], "Game ", "", -1))
 		game.id = id
 
-		// Get each cube
-		game.red = getColor(Red, line)
-		game.green = getColor(Green, line)
-		game.blue = getColor(Blue, line)
+		sets := strings.Split(strings.Split(line, ":")[1], ";")
 
-		if game.red != 0 && game.green != 0 && game.blue != 0 {
+		if parseItems(sets) {
 			*games = append(*games, game)
 		}
 	}
@@ -102,7 +79,6 @@ func SolveDayTwoPartOne() {
 	total := 0
 
 	for _, game := range games {
-		fmt.Println(game.id)
 		total += game.id
 	}
 

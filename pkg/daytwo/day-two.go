@@ -6,6 +6,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"golang.org/x/tools/go/analysis/passes/tests"
 )
 
 type Game struct {
@@ -13,7 +15,7 @@ type Game struct {
 }
 
 func input() string {
-	content, err := ioutil.ReadFile("./pkg/daytwo/day-two-input.txt")
+	content, err := ioutil.ReadFile("./pkg/daytwo/day-two-input-test.txt")
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
@@ -69,6 +71,20 @@ func partOne(lines []string, games *[]Game) {
 	}
 }
 
+func partTwo(lines []string, games *[]Game) {
+	for _, line := range lines {
+		if line == "" {
+			return
+		}
+
+		var game Game
+
+		// Find the id of the game
+		id, _ := strconv.Atoi(strings.Replace(strings.Split(line, ":")[0], "Game ", "", -1))
+		game.id = id
+	}
+}
+
 func SolveDayTwoPartOne() {
 	lines := strings.Split(input(), "\n")
 
@@ -83,4 +99,17 @@ func SolveDayTwoPartOne() {
 	}
 
 	fmt.Println("day two part one", total)
+}
+
+func SolveDayTwoPartTwo() {
+	lines := strings.Split(input(), "\n")
+
+	var games []Game
+	partTwo(lines, &games)
+
+	total := 0
+
+	for _, game := range games {
+		total = total * game.id
+	}
 }

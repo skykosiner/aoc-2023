@@ -1,0 +1,1 @@
+Map<Filter<Chars<'_>, {closure@src/bin/dayone.rs:12:21: 12:24}>, for<'a> fn(&'a str) -> Result<i32, <i32 as FromStr>::Err> {core::str::<impl str>::parse::<i32>}>
